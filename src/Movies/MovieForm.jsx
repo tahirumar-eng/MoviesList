@@ -9,9 +9,9 @@ import joi from 'joi-browser';
 class MovieForm extends Form {    //{match,history}
     state = {
         account: {
-            Title: '',
-            Genreid: '',
-            Numberinstock: '',
+            title: '',
+            Genre: '',
+            Stock: '',
             Rate: ''
         },
         genres: [],
@@ -19,9 +19,9 @@ class MovieForm extends Form {    //{match,history}
     }
     schema = {
         _id: joi.string(),
-        Title: joi.string().required().label("title"),
+        title: joi.string().required().label("title"),
         Genreid: joi.string().required().label("Genre"),
-        Numberinstock: joi.number().required().min(0).max(100).label("Number in Stock"),
+        Stock: joi.number().required().min(0).max(100).label("Number in Stock"),
         Rate: joi.number().required().min(0).max(10).label("Daily Rental Rate"),
     }
 
@@ -52,7 +52,13 @@ class MovieForm extends Form {    //{match,history}
         if (errorMessage) errors[input.name] = errorMessage;
         else delete errors[input.name];
         const account = { ...this.state.account };
-        account[input.name] = input.value;
+        if (input.name === 'Genreid')
+            account['Genre'] = getGenres().find((item) => { return item._id === input.value })['name'];
+        else
+            account[input.name] = input.value;
+
+        console.log(account);
+
         this.setState({ account, errors });
 
     }
@@ -67,6 +73,7 @@ class MovieForm extends Form {    //{match,history}
         // const addmovie= getnewMovie();
         // console.log(addmovie)
         console.log('submitted');
+        this.state.account.id = this.props.movies.length + 1 || 1;;
         this.props.movies.push(this.state.account);
         this.setState({ toDashboard: true });
         this.setState({ errors: errors || {} });
@@ -89,10 +96,10 @@ class MovieForm extends Form {    //{match,history}
         Save</button> */}
                 <h1>Movie Form</h1>
                 <form onSubmit={this.handleSubmit}>
-                    {this.renderInput("Title", "Title")}
+                    {this.renderInput("title", "Title")}
 
                     {this.renderSelect("Genreid", "Genre", this.state.genres)}
-                    {this.renderInput("Numberinstock", "Number in Stock", "number")}
+                    {this.renderInput("Stock", "Number in Stock", "number")}
                     {this.renderInput("Rate", "Rate", "number")}
                     {this.renderButton("Save")}
 

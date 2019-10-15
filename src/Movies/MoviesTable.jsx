@@ -23,6 +23,7 @@ class MovieTable extends Component {
   
   render() { 
     const{movies,sortColumn,onSort}=this.props;
+    console.log(movies);
     return(
 
       

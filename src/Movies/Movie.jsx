@@ -20,22 +20,23 @@ class Movie extends Component {
             path: 'title',
             order: "asc"
         },
-
     }
-
 
     handleGenreSelect = genre => {
         this.setState({ selectedGenre: genre, currentPage: 1 })
     }
+
     componentDidMount() {
         const genre = [{ name: 'All Genres ' }, ...getGenres()]
         this.setState({ movies: getmovies(), genre })
 
         console.log("Movies", getmovies())
     }
+
     handleDelete = (movie) => {
         this.setState({ movies: this.state.movies.filter(m => m.id !== movie.id) })
     }
+
     handleLiked = (movie) => {
         const movies = [...this.state.movies]; // all origional movies
         const index = movies.indexOf(movie); // index of movie passed as a arg e.g 2
@@ -43,14 +44,17 @@ class Movie extends Component {
         movies[index].liked = !movies[index].liked;
         this.setState({ movies });
     }
+
     handlePageChange = page => {
         this.setState({ currentPage: page });
 
     }
+
     handleSort = (sortColumn) => {
 
         this.setState({ sortColumn });
     }
+
     getPageData = () => {
         const {
             currentPage,
@@ -59,17 +63,13 @@ class Movie extends Component {
             selectedGenre,
             movies: allmovies
         } = this.state;
-        const filtered =
-            selectedGenre && selectedGenre._id
-                ? allmovies.filter(m => m.Genre === selectedGenre.name)
-                : allmovies;
+        const filtered = selectedGenre && selectedGenre._id ? allmovies.filter(m => m.Genre === selectedGenre.name) : allmovies;
 
         const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order])
 
         const movies = Paginate(sorted, currentPage, pageSize)
         return { totalCount: filtered.length, data: movies };
     }
-
 
     updateMovies(movie) {
         console.log('movie arrived');
@@ -78,7 +78,7 @@ class Movie extends Component {
 
     render() {
 
-        const {sortColumn} = this.state;
+        const { sortColumn } = this.state;
         if (this.props.movies.length === 0)
             return <p>there is no movie in data base </p>;
         const { totalCount, data: movies } = this.getPageData();
@@ -100,10 +100,10 @@ class Movie extends Component {
                         />
                     </div>
                     <div className="col">
-                        <Link 
-                        to="/movieform" 
-                        className="btn btn-primary">New Movie</Link>
-                        <p>Showing{totalCount} movies in the Database </p>
+                        <Link
+                            to="/movieform"
+                            className="btn btn-primary">New Movie</Link>
+                        <p>Showing {totalCount} movies in the Database </p>
 
                         <MoviesTable
                             movies={movies}
